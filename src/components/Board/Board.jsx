@@ -3,10 +3,13 @@ import Snake from '../Snake/Snake'
 import gsap from 'gsap'
 import styles from './Board.module.scss'
 import Food from '../Food/Food'
-import { generateRandomCoordinates } from '../../utils/utils'
+import { defaultControls, generateRandomCoordinates, reversedControls } from '../../utils/utils'
 import GameOver from '../GameOver/GameOver'
+import useStore from '../../utils/store'
 
 const Board = () => {
+
+    const { mode, removeMode } = useStore();
     const [snakeData, setSnakeData] = useState([
         [0, 0],
         [10, 0]
@@ -119,39 +122,13 @@ const Board = () => {
         if (canChangeDirection.current === false) return
         canChangeDirection.current = false
 
-        switch (e.keyCode) {
-            case 38: // key up
-                if (direction.current !== 'DOWN') {
-                    direction.current = 'UP'  
-                }
-                break
-
-            case 40: // key down
-                if (direction.current !== 'UP') {
-                    direction.current = 'DOWN'
-                }
-                break
-
-            case 37: // key left
-                if (direction.current !== 'RIGHT') {
-                    direction.current = 'LEFT'
-                }
-                break
-
-            case 39: // key right
-                if (direction.current !== 'LEFT') {
-                    direction.current = 'RIGHT'
-                }
-                break
-
-            default:
-                break
-        }
+        mode.includes('Reversed') ? reversedControls(e, direction) : defaultControls(e, direction);
+        
     }
 
     const addFood = () => {
         // generate random x and y 
-        const coordinates = generateRandomCoordinates()
+        const coordinates = generateRandomCoordinates(mode)
 
         // update state
         setFoodArray((oldFoodArray) => [...oldFoodArray, coordinates])
@@ -161,7 +138,7 @@ const Board = () => {
         timer.current += deltaTime * 0.001 // convert to seconds
         foodTimer.current += deltaTime * 0.001 // convert to seconds 
 
-        if (timer.current > speed) {
+        if (timer.current > (mode.includes("impossible") ? 0.02 : speed)) {
             timer.current = 0
             moveSnake()
             canChangeDirection.current = true
@@ -191,6 +168,10 @@ const Board = () => {
     }
 
     const replay = () => {
+        removeMode("Corner")
+        removeMode("Impossible")
+        removeMode("Halloween")
+        removeMode("Reversed")
         setGameOver(false)
         setSnakeData([ [0, 0],[10, 0] ])
         setFoodArray([])
