@@ -3,7 +3,7 @@ import Snake from '../Snake/Snake'
 import gsap from 'gsap'
 import styles from './Board.module.scss'
 import Item from '../Item/Item'
-import { defaultControls, flashUser, triggerMode, wizz, generateRandomCoordinates, reversedControls } from '../../utils/utils'
+import { defaultControls, flashUser, screamerUser, triggerMode, wizz, generateRandomCoordinates, reversedControls } from '../../utils/utils'
 import GameOver from '../GameOver/GameOver'
 import useStore from '../../utils/store'
 
@@ -103,7 +103,7 @@ const Board = () => {
         } else {
             if (eatenTrap === true) {
                 // trap execution logic
-                const effects = [flashUser, triggerMode, wizz];
+                const effects = [flashUser, screamerUser, triggerMode, wizz];
                 // const effects = [wizz];
 
                 const selectedEffect =

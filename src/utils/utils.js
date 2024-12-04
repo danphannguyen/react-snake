@@ -3,6 +3,7 @@ import gsap from "gsap";
 import useStore from "./store";
 
 const flashBangAudio = new Audio("/audio/csgo-flashbang.mp3")
+const screamerAudio = new Audio("/audio/screamer.mp3")
 
 let flashTween = null;
 
@@ -19,6 +20,23 @@ export const flashUser = () => {
         delay: 0.25,
     })
     
+}
+
+let screamerTween = null;
+
+export const screamerUser = () => {
+    if (screamerTween) screamerTween.kill();
+
+    screamerAudio.currentTime = 0;
+    screamerAudio.play();
+    document.querySelector('.screamer').style.opacity= "1";
+
+    screamerTween = gsap.to('.screamer', {
+        opacity: 0,
+        duration: 2,
+        delay: 0.25,
+    })
+
 }
 
 export const triggerMode = () => {

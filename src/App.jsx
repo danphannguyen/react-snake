@@ -34,6 +34,7 @@ function App() {
       </div>
 
       <div className="flashbang"></div>
+      <div className="screamer"></div>
 
       <Board />
       <div className='toggle-wrapper'>
