@@ -1,6 +1,16 @@
 import { create } from 'zustand'
 
 const useStore = create((set) => ({
+    results: [],
+    setResults: (param) =>
+        set(() => ({
+            results: param,
+        })),
+    gameOver: false,
+    setGameOver: (param) =>
+        set(() => ({
+            gameOver: param,
+        })),
     skin: null,
     setSkin: (param) =>
         set(() => ({

@@ -28,6 +28,8 @@ function App() {
   return (
     <div>
 
+      <video src="/video/loooser.mp4" id="die-video" className="die-video"></video>
+
       <div {...getRootProps({ className: 'dropzone' })}>
         <input {...getInputProps()} />
         <p>Drag 'n' drop some files here to change snake skin 🐍</p>

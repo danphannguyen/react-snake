@@ -5,6 +5,8 @@ import styles from './Board.module.scss'
 import Item from '../Item/Item'
 import { defaultControls, flashUser, screamerUser, triggerMode, wizz, generateRandomCoordinates, reversedControls } from '../../utils/utils'
 import GameOver from '../GameOver/GameOver'
+import Submit from '../Submit/Submit'
+import Scoreboard from '../Scoreboard/Scoreboard'
 import useStore from '../../utils/store'
 
 const Board = () => {
@@ -18,10 +20,12 @@ const Board = () => {
     const [foodArray, setFoodArray] = useState([])
     const [trapArray, setTrapArray] = useState([])
 
+    const [hasEnteredResults, setHasEnteredResults] = useState(false);
 
     const [gameOver, setGameOver] = useState(false)
     const [speed, setSpeed] = useState(0.3)
     const [score, setScore] = useState(0)
+    const [death, setDeath] = useState(0);
 
     const timer = useRef(0)
     const foodTimer = useRef(0)
@@ -31,6 +35,17 @@ const Board = () => {
 
     const gameIsOver = () => {
         gsap.ticker.remove(gameloop)
+
+        setDeath(death + 1);
+
+        const video = document.getElementById("die-video");
+        video.style.display = "block";
+        video.currentTime = 0;
+        video.play();
+        video.addEventListener("ended", (event) => {
+            video.style.display = "none"
+        });
+
         setGameOver(true)
     }
 
@@ -52,6 +67,10 @@ const Board = () => {
             // update food array
             const newItemArray = getter.filter(_item => _item !== item);
             setter(newItemArray)
+
+            const eatAudio = new Audio("/audio/eat.mp3")
+            eatAudio.currentTime = 0;
+            eatAudio.play();
 
             return true
         } else {
@@ -149,6 +168,19 @@ const Board = () => {
         // generate random x and y 
         const coordinates = generateRandomCoordinates(mode)
 
+        const array = [...foodArray, ...trapArray];
+
+        //test pour savoir si un item est déjà existant à cet endroit
+        const itemAlreadyExistsHere = array.some(
+            (item) => item.x === coordinates.x && coordinates.y === item.y
+        );
+
+        // si ça existe déjà, rappeler la fonction
+        if (itemAlreadyExistsHere) {
+            addItem({ getter, setter });
+            return;
+        }
+
         // update state
         setter((oldArray) => [...oldArray, coordinates])
     }
@@ -210,11 +242,15 @@ const Board = () => {
         setSnakeData([[0, 0], [10, 0]])
         setFoodArray([])
         setTrapArray([])
+        setHasEnteredResults(false);
         setSpeed(0.3)
         setScore(0)
         direction.current = 'RIGHT'
         timer.current = 0
         foodTimer.current = 0
+        const video = document.getElementById("die-video");
+        video.style.display = "none";
+        video.pause();
     }
 
     useEffect(() => {
@@ -228,21 +264,33 @@ const Board = () => {
     }, [snakeData])
 
     return (
-        <div id='board' className={styles.boardTest}>
-            <Snake data={snakeData} />
-
-            <span className={styles.score}>Score: {score}</span>
-
+        <>
             {gameOver && <GameOver replay={replay} />}
+            {gameOver && !hasEnteredResults && (
+                <Submit
+                    score={score}
+                    death={death}
+                    setHasEnteredResults={setHasEnteredResults}
+                />
+            )}
+            {gameOver && <Scoreboard />}
 
-            {foodArray.map((coordinates) => (
-                <Item key={coordinates.id} coordinates={coordinates} type="food" />
-            ))}
+            <div id='board' className={styles.boardTest}>
+                <Snake data={snakeData} />
 
-            {trapArray.map((coordinates) => (
-                <Item key={coordinates.id} coordinates={coordinates} type="trap" />
-            ))}
-        </div>
+                <span className={styles.score}>Score: {score}</span>
+                <span className={styles.death}>Death: {death}</span>
+
+                {foodArray.map((coordinates) => (
+                    <Item key={coordinates.id} coordinates={coordinates} type="food" />
+                ))}
+
+                {trapArray.map((coordinates) => (
+                    <Item key={coordinates.id} coordinates={coordinates} type="trap" />
+                ))}
+            </div>
+        </>
+
     )
 }
 

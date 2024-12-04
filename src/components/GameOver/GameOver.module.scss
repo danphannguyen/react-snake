@@ -13,3 +13,17 @@
     justify-content: center;
     flex-direction: column;
 }
+
+.btn {
+    position: absolute;
+    padding: 12px 24px;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    border: solid 2px white;
+    border-radius: 10px;
+    background-color: transparent;
+    color: white;
+    cursor: pointer;
+}

@@ -3,8 +3,7 @@ import style from './GameOver.module.scss';
 const GameOver = ({replay}) => {
     return (
         <div className={style.gameOver}>
-            <h1>Game Over</h1>
-            <button onClick={replay}>Try again?</button>
+            <button onClick={replay} className={style.btn}>Try again?</button>
         </div>
     );
 }
