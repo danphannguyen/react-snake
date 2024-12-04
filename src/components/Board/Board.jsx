@@ -34,8 +34,7 @@ const Board = () => {
         setGameOver(true)
     }
 
-    const isOutOfBorder = () => {
-        const head = snakeData[snakeData.length - 1]
+    const isOutOfBorder = (head) => {
 
         if (head[0] < 0 || head[0] >= 500 || head[1] < 0 || head[1] >= 500) {
             return true
@@ -88,8 +87,8 @@ const Board = () => {
         newSnakeData.push(head)
         newSnakeData.shift()
 
-        const snakeCollapsed = hasCollapsed()
-        const outOfBorder = isOutOfBorder();
+        const snakeCollapsed = hasCollapsed(head)
+        const outOfBorder = isOutOfBorder(head);
         const eatenFood = asEatenItem({
             getter: foodArray,
             setter: setFoodArray,
@@ -124,9 +123,8 @@ const Board = () => {
 
     };
 
-    const hasCollapsed = () => {
+    const hasCollapsed = (head) => {
         let snake = [...snakeData]
-        let head = snake[snake.length - 1]
 
         snake.pop()
         for (let i = 0; i < snake.length; i++) {
