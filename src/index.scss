@@ -7,6 +7,7 @@ body {
   position: fixed;
   top: 12px;
   right: 12px;
+  z-index: 10;
 }
 
 .flashbang {
@@ -19,4 +20,21 @@ body {
   z-index: 10;
   opacity: 0;
   pointer-events: none;
+}
+
+.dropzone {
+  position: fixed;
+  width: 80%;
+  margin: 0 auto;
+  height: 10vh;
+  bottom: 0;
+  left: 10%;
+  z-index: 1;
+  border: dotted 1px white;
+  color: white;
+
+  outline: none;
+  input {
+    outline: none;
+  }
 }
